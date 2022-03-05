@@ -14,15 +14,18 @@
 #include <string>
 #include <vector>
 
+#include <fstream>
+#include <sstream>
+
 using namespace std;
 
 int main()
 {
     PersonProfile pp ("Kristal Light", "kristallee365@gmail.com");
-    AttValPair a("hobby", "coding");
-    AttValPair b("hobby", "crochet");
-    AttValPair c("quality", "amazing");
-    AttValPair d("quality", "amazing");
+    AttValPair a("hobby", "reading");
+    AttValPair b("hobby", "gaming");
+    AttValPair c("quality", "nice");
+    AttValPair d("quality", "nice");
     pp.AddAttValPair(a);
     pp.AddAttValPair(b);
     pp.AddAttValPair(c);
@@ -34,7 +37,43 @@ int main()
         pp.GetAttVal(k, av);
         std:: cout << av.attribute << "->" << av.value << std::endl;
     }
+    
+    
+    
+    std::ifstream translator("/Users/Kristal/Documents/CS 32/Project 4/Unhinged/translator.txt");
+    if (!translator)
+        cout << "Error :(" << endl;
+
+    string line;
+    while (getline(translator, line))
+    {
+        istringstream iss(line);
+
+        string source_attribute, source_value, compatible_attribute, compatible_value, trash;
+        if (!getline(iss, source_attribute, ','))
+        {
+            cout << "error in source attribute" << endl;
+        }
+        if (!getline(iss, source_value, ','))
+        {
+            cout << "error in source attribute" << endl;
+        }
+        if (!getline(iss, compatible_attribute, ','))
+        {
+            cout << "error in compatible attribute" << endl;;
+        }
+        if (!getline(iss, compatible_value))
+        {
+            cout << "error in compatible value" << endl;
+        }
+    
+        cout << source_attribute + source_value + compatible_attribute + compatible_value << endl;
+      
+    }
 }
+        
+    
+    
 
 
 

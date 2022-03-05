@@ -25,6 +25,33 @@ std::string PersonProfile::GetEmail() const
 
 void PersonProfile::AddAttValPair(const AttValPair& attval)
 {
+    /*
+    std::unordered_map<std::string, std::string>::iterator it;
+    
+    if (m_numPairs == 0)
+    {
+        avp.insert(attval.attribute, attval.value);
+        m_numPairs++;
+        return;
+    }
+    
+    it = avp.search(attval.attribute);
+    
+    while (it != avp.end())
+    {
+        //Check if attval already exists in the list
+        if (*it == attval)
+        {
+            return;
+        }
+    
+        it++;
+    }
+    avp.push_back(attval);
+    m_numPairs++;
+    return;
+    */
+    
     std::list<AttValPair>::iterator it = avp.begin();
     
     if (m_numPairs == 0)
@@ -47,6 +74,7 @@ void PersonProfile::AddAttValPair(const AttValPair& attval)
     avp.push_back(attval);
     m_numPairs++;
     return;
+     
 }
 
 int PersonProfile::GetNumAttValPairs() const
