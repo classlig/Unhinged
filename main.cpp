@@ -36,10 +36,9 @@ int main()
         cout << av.attribute << "->" << av.value << endl;
     }
     
-    
     AttributeTranslator at;
     
-    string pathname = "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/translator.txt";
+    string pathname =  /*"/Users/Kristal/Documents/CS 32/Project 4/Unhinged/*/"translator.txt";
     if (at.Load(pathname) == false)
     {
         cout << "wot" << endl;

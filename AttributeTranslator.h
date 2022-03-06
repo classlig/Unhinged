@@ -10,6 +10,7 @@
 
 #include "provided.h"
 #include <string>
+#include <vector>
 
 class AttributeTranslator
 {

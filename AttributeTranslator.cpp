@@ -23,7 +23,7 @@ AttributeTranslator::~AttributeTranslator()
     BUCKET* bucketPointer = &m_buckets[i];
     BUCKET* mainBucketPointer;
     
-    for (; i < NUM_BUCK;)
+    while (i < NUM_BUCK)
     {
          
         mainBucketPointer = &m_buckets[i];
@@ -40,7 +40,10 @@ AttributeTranslator::~AttributeTranslator()
         if (bucketPointer == mainBucketPointer)
         {
             i++;
-            mainBucketPointer = &m_buckets[i];
+            if (i != NUM_BUCK)
+            {
+                mainBucketPointer = &m_buckets[i];
+            }
         }
         
         if (bucketPointer->used == true && bucketPointer->next == nullptr)
@@ -108,7 +111,7 @@ bool AttributeTranslator::Load(std::string filename)
         
         BUCKET* bucketPointer = &m_buckets[numBucket];
         
-        while (bucketPointer->used == true)
+        while (bucketPointer->used == true && bucketPointer->next != nullptr)
         {
             bucketPointer = bucketPointer->next;
         }
@@ -122,8 +125,9 @@ bool AttributeTranslator::Load(std::string filename)
             m_buckets[numBucket].next = new BUCKET;
             m_buckets[numBucket].next->source = sourcePair;
             m_buckets[numBucket].next->compatible = compatiblePair;
+            m_buckets[numBucket].next->used = true;
             bucketPointer->used = true;
-            bucketPointer->next = new BUCKET; //create a new bucket to signal the end of a linked list
+            //bucketPointer->next->next = new BUCKET; //create a new bucket to signal the end of a linked list
             
             //std::cout << m_buckets[numBucket].next->compatible->attribute << m_buckets[numBucket].next->compatible->value << std::endl;
          

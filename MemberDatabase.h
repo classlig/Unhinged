@@ -11,6 +11,7 @@
 #include "PersonProfile.h"
 #include "provided.h"
 #include <string>
+#include <vector>
 
 class MemberDatabase
 {
