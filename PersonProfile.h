@@ -9,7 +9,6 @@
 #define PersonProfile_h
 
 #include "provided.h"
-#include "RadixTree.h"
 #include <list>
 #include <string>
 

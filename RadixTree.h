@@ -9,14 +9,15 @@
 #define RadixTree_h
 
 #include <string>
-#include <unordered_map>
+#include <map>
 
 template <typename ValueType>
 class RadixTree
 {
 public:
     RadixTree();
-    ~RadixTree();
+    //~RadixTree();
+    
     void insert(std::string key, const ValueType& value)
     {
         radixTree[key] = value;
@@ -24,19 +25,21 @@ public:
     
     ValueType* search(std::string key) const
     {
-        typename std::unordered_map<std::string, ValueType>::const_iterator it;
+        typename std::map<std::string, ValueType>::const_iterator it;
         it = radixTree.find(key);
         
         if (it == radixTree.end())
         {
             return nullptr;
         }
+        const ValueType* valueType = &it->second;
+        //const ValueType valueType = it->second;
         
-        return it->second;
+        return valueType;
     }
     
 private:
-    std::unordered_map<std::string, ValueType> radixTree;
+    std::map<std::string, ValueType> radixTree;
 };
 
 #endif /* RadixTree_h */

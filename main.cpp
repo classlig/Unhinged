@@ -10,12 +10,10 @@
 #include "MemberDatabase.h"
 #include "MatchMaker.h"
 #include "provided.h"
+#include "RadixTree.h"
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include <fstream>
-#include <sstream>
 
 using namespace std;
 
@@ -35,42 +33,29 @@ int main()
     {
         AttValPair av;
         pp.GetAttVal(k, av);
-        std:: cout << av.attribute << "->" << av.value << std::endl;
+        cout << av.attribute << "->" << av.value << endl;
     }
     
     
+    AttributeTranslator at;
     
-    std::ifstream translator("/Users/Kristal/Documents/CS 32/Project 4/Unhinged/translator.txt");
-    if (!translator)
-        cout << "Error :(" << endl;
-
-    string line;
-    while (getline(translator, line))
+    string pathname = "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/translator.txt";
+    if (at.Load(pathname) == false)
     {
-        istringstream iss(line);
-
-        string source_attribute, source_value, compatible_attribute, compatible_value, trash;
-        if (!getline(iss, source_attribute, ','))
-        {
-            cout << "error in source attribute" << endl;
-        }
-        if (!getline(iss, source_value, ','))
-        {
-            cout << "error in source attribute" << endl;
-        }
-        if (!getline(iss, compatible_attribute, ','))
-        {
-            cout << "error in compatible attribute" << endl;;
-        }
-        if (!getline(iss, compatible_value))
-        {
-            cout << "error in compatible value" << endl;
-        }
-    
-        cout << source_attribute + source_value + compatible_attribute + compatible_value << endl;
-      
+        cout << "wot" << endl;
     }
+     
+    /*
+    RadixTree<string> rt;
+    rt.insert("apples", "oranges");
+    rt.insert("bananas", "peaches");
+    
+    string* s;
+    s = rt.search("bananas");
+    cout << s << endl;
+     */
 }
+
         
     
     

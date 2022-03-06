@@ -6,19 +6,141 @@
 //
 
 #include "AttributeTranslator.h"
+#include <fstream>
 #include <functional>
+#include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
 AttributeTranslator::AttributeTranslator()
+{}
+
+
+AttributeTranslator::~AttributeTranslator()
 {
+    int i = 0;
+    BUCKET* bucketPointer = &m_buckets[i];
+    BUCKET* mainBucketPointer;
+    
+    for (; i < NUM_BUCK;)
+    {
+         
+        mainBucketPointer = &m_buckets[i];
+        //bucketPointer = &m_buckets[i];
+        
+        
+        BUCKET* prev = bucketPointer;
+        while (bucketPointer->used == true && bucketPointer->next != nullptr)
+        {
+            prev = bucketPointer;
+            bucketPointer = bucketPointer->next;
+        }
+        
+        if (bucketPointer == mainBucketPointer)
+        {
+            i++;
+            mainBucketPointer = &m_buckets[i];
+        }
+        
+        if (bucketPointer->used == true && bucketPointer->next == nullptr)
+        {
+            delete bucketPointer->source;
+            bucketPointer->source = nullptr;
+            delete bucketPointer->compatible;
+            bucketPointer->compatible = nullptr;
+            
+            bucketPointer->used = false;
+        }
+        
+        //If the bucket is empty and unused
+        if ( bucketPointer->used == false &&  bucketPointer->next == nullptr)
+        {
+            prev->next = nullptr;
+            if (prev != bucketPointer) //If prev == next then we are at a bucket that is not dynamically allocated (A.K.A. the main array)
+            {
+                delete bucketPointer;
+            }
+            
+            bucketPointer = mainBucketPointer;
+        }
+        
+        
+    }
 }
 
+ 
 bool AttributeTranslator::Load(std::string filename)
-//How do you load a file?
 {
-    return false;
+    
+    //Load file and if anything doesn't load properly, return false
+    std::ifstream translator(filename);
+    if (!translator)
+    {
+        return false;
+    }
+
+    std::string line;
+    while (getline(translator, line))
+    {
+        std::istringstream iss(line);
+
+        std::string source_attribute, source_value, compatible_attribute, compatible_value, trash;
+        if (!getline(iss, source_attribute, ','))
+        {
+            return false;
+        }
+        if (!getline(iss, source_value, ','))
+        {
+            return false;
+        }
+        if (!getline(iss, compatible_attribute, ','))
+        {
+            return false;
+        }
+        if (!getline(iss, compatible_value))
+        {
+            return false;
+        }
+        
+        //If getting the line goes smoothly, create a bucket# and try to fill it
+        int numBucket = mapFunc(source_attribute, source_value);
+        
+        BUCKET* bucketPointer = &m_buckets[numBucket];
+        
+        while (bucketPointer->used == true)
+        {
+            bucketPointer = bucketPointer->next;
+        }
+        
+        if (bucketPointer->used == false)
+        {
+            AttValPair* sourcePair = new AttValPair(source_attribute, source_value);
+            
+            AttValPair* compatiblePair = new AttValPair(compatible_attribute, compatible_value);
+            
+            m_buckets[numBucket].next = new BUCKET;
+            m_buckets[numBucket].next->source = sourcePair;
+            m_buckets[numBucket].next->compatible = compatiblePair;
+            bucketPointer->used = true;
+            bucketPointer->next = new BUCKET; //create a new bucket to signal the end of a linked list
+            
+            //std::cout << m_buckets[numBucket].next->compatible->attribute << m_buckets[numBucket].next->compatible->value << std::endl;
+         
+        }
+         
+    }
+        
+        
+    
+        //cout << source_attribute + source_value + compatible_attribute + compatible_value << endl;
+      
+    
+    
+    return true;
 }
+
+
 
 unsigned int AttributeTranslator::mapFunc(std::string att,  std::string val) const
 {
@@ -28,6 +150,7 @@ unsigned int AttributeTranslator::mapFunc(std::string att,  std::string val) con
     unsigned int bucketNum = hashValue % NUM_BUCK;
     return bucketNum;
 }
+
 
 std::vector<AttValPair> AttributeTranslator::FindCompatibleAttValPairs(const AttValPair& source) const
 {
@@ -46,7 +169,7 @@ std::vector<AttValPair> AttributeTranslator::FindCompatibleAttValPairs(const Att
     
     else if (attributeBucket.used == true)
     {
-        while (attributeBucket.source != source)
+        while (*attributeBucket.source != source)
         {
             if (attributeBucket.next == nullptr)
             {
@@ -56,12 +179,13 @@ std::vector<AttValPair> AttributeTranslator::FindCompatibleAttValPairs(const Att
             attributeBucket = *attributeBucket.next;
         }
         
-        if (attributeBucket.source == source)
+        if (*attributeBucket.source == source)
         {
-            compatiblePair.push_back(attributeBucket.compatible);
+            compatiblePair.push_back(*attributeBucket.compatible);
             return compatiblePair;
         }
     }
     
     return compatiblePair;
 }
+
