@@ -11,12 +11,14 @@
 #include <string>
 #include <map>
 
+#include <iostream>
+
 template <typename ValueType>
 class RadixTree
 {
 public:
-    RadixTree();
-    //~RadixTree();
+    RadixTree() {}
+    ~RadixTree() {}
     
     void insert(std::string key, const ValueType& value)
     {
@@ -25,17 +27,19 @@ public:
     
     ValueType* search(std::string key) const
     {
+        // typename std::map<std::string, ValueType>::iterator it;
         typename std::map<std::string, ValueType>::const_iterator it;
+        // auto
         it = radixTree.find(key);
-        
         if (it == radixTree.end())
         {
             return nullptr;
         }
-        const ValueType* valueType = &it->second;
-        //const ValueType valueType = it->second;
+        std::cout << it->second << std::endl;
         
-        return valueType;
+        // ValueType* valueType = &(it->second);
+        // return &(it->second); // &(it->second);
+        return const_cast<ValueType*>(&(it->second));
     }
     
 private:

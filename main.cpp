@@ -19,6 +19,7 @@ using namespace std;
 
 int main()
 {
+    
     PersonProfile pp ("Kristal Light", "kristallee365@gmail.com");
     AttValPair a("hobby", "reading");
     AttValPair b("hobby", "gaming");
@@ -38,21 +39,21 @@ int main()
     
     AttributeTranslator at;
     
-    string pathname =  /*"/Users/Kristal/Documents/CS 32/Project 4/Unhinged/*/"translator.txt";
+    string pathname =  "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/translator.txt";
     if (at.Load(pathname) == false)
     {
-        cout << "wot" << endl;
+        cout << "error" << endl;
     }
-     
-    /*
+    
+    
     RadixTree<string> rt;
     rt.insert("apples", "oranges");
     rt.insert("bananas", "peaches");
     
     string* s;
     s = rt.search("bananas");
-    cout << s << endl;
-     */
+    cout << *s << endl;
+     
 }
 
         

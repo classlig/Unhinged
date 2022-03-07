@@ -106,6 +106,8 @@ bool AttributeTranslator::Load(std::string filename)
             return false;
         }
         
+        sourceCompatAttPair.insert(source_attribute, source_attribute);
+        
         //If getting the line goes smoothly, create a bucket# and try to fill it
         int numBucket = mapFunc(source_attribute, source_value);
         
@@ -127,20 +129,8 @@ bool AttributeTranslator::Load(std::string filename)
             m_buckets[numBucket].next->compatible = compatiblePair;
             m_buckets[numBucket].next->used = true;
             bucketPointer->used = true;
-            //bucketPointer->next->next = new BUCKET; //create a new bucket to signal the end of a linked list
-            
-            //std::cout << m_buckets[numBucket].next->compatible->attribute << m_buckets[numBucket].next->compatible->value << std::endl;
-         
         }
-         
     }
-        
-        
-    
-        //cout << source_attribute + source_value + compatible_attribute + compatible_value << endl;
-      
-    
-    
     return true;
 }
 

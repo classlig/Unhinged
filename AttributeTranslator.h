@@ -9,6 +9,7 @@
 #define AttributeTranslator_h
 
 #include "provided.h"
+#include "RadixTree.h"
 #include <string>
 #include <vector>
 
@@ -39,7 +40,7 @@ private:
     unsigned int mapFunc(std::string att, std::string val) const;
     
     
-    //RadixTree<std::string> sourceCompatAttPair;
+    RadixTree<std::string> sourceCompatAttPair;
     
 };
 #endif /* AttributeTranslator_h */

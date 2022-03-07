@@ -9,6 +9,7 @@
 #define PersonProfile_h
 
 #include "provided.h"
+#include "RadixTree.h"
 #include <list>
 #include <string>
 
@@ -28,7 +29,7 @@ private:
     std::string m_email;
     int m_numPairs;
     std::list<AttValPair> avp;
-    //RadixTree<std::string> avp;
+    RadixTree<std::string> attributesToValues;
 };
 
 
