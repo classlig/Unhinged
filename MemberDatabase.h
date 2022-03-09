@@ -10,17 +10,23 @@
 
 #include "PersonProfile.h"
 #include "provided.h"
+#include "RadixTree.h"
+#include <list>
 #include <string>
 #include <vector>
 
 class MemberDatabase
 {
 public:
-    MemberDatabase();
+    MemberDatabase() {};
     
     bool LoadDatabase(std::string filename);
     std::vector<std::string> FindMatchingMembers(const AttValPair& input) const;
     const PersonProfile* GetMemberByEmail(std::string email) const;
+    
+private:
+    RadixTree<std::list<std::string>> pairToEmail;
+    RadixTree<PersonProfile*> emailToProfile;
     
 };
 #endif /* MemberDatabase_h */

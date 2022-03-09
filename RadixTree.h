@@ -27,18 +27,12 @@ public:
     
     ValueType* search(std::string key) const
     {
-        // typename std::map<std::string, ValueType>::iterator it;
         typename std::map<std::string, ValueType>::const_iterator it;
-        // auto
         it = radixTree.find(key);
         if (it == radixTree.end())
         {
             return nullptr;
         }
-        std::cout << it->second << std::endl;
-        
-        // ValueType* valueType = &(it->second);
-        // return &(it->second); // &(it->second);
         return const_cast<ValueType*>(&(it->second));
     }
     

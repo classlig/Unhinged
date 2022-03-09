@@ -46,6 +46,16 @@ int main()
     }
     
     
+    MemberDatabase md;
+    
+    string mdpathname = "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/members.txt";
+    
+    if (md.LoadDatabase(mdpathname) == false)
+    {
+        cout << "error at md" << endl;
+    }
+    
+    
     RadixTree<string> rt;
     rt.insert("apples", "oranges");
     rt.insert("bananas", "peaches");
