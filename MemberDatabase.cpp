@@ -135,6 +135,29 @@ bool MemberDatabase::LoadDatabase(std::string filename)
     return true;
 }
 
-
+std::vector<std::string> MemberDatabase::FindMatchingMembers(const AttValPair& input) const
+{
+    std::string att = input.attribute;
+    std::string val = input.value;
+    std::string pair = att + ',' + val;
+    
+    std::vector<std::string> emails;
+    
+    std::list<std::string>* ValueTypePointer = pairToEmail.search(pair);
+    if (ValueTypePointer != nullptr)
+    {
+        std::list<std::string>::iterator it = ValueTypePointer->begin();
+        //int n = 0;
+        while(it != ValueTypePointer->end())
+        {
+            emails.push_back(*it);
+            //std::cout << *it << std::endl;
+            it++;
+            //n++;
+        }
+        //std::cout << n << std::endl;
+    }
+    return emails;
+}
 
 

@@ -55,6 +55,9 @@ int main()
         cout << "error at md" << endl;
     }
     
+    AttValPair mba("trait", "quirky");
+    md.FindMatchingMembers(mba);
+    
     
     RadixTree<string> rt;
     rt.insert("apples", "oranges");
