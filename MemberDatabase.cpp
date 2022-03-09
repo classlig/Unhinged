@@ -12,6 +12,16 @@
 #include <string>
 #include <vector>
 
+MemberDatabase::~MemberDatabase()
+{
+    std::list<PersonProfile*>::iterator it = pointerToProfiles.begin();
+    while (it != pointerToProfiles.end())
+    {
+        delete *it;
+        it = pointerToProfiles.erase(it);
+    }
+}
+
 bool MemberDatabase::LoadDatabase(std::string filename)
 {
     //Load file and if anything doesn't load properly, return false
@@ -78,6 +88,7 @@ bool MemberDatabase::LoadDatabase(std::string filename)
         //std::cout << *it << std::endl;
         
         PersonProfile* profilePointer = new PersonProfile(name, email);
+        pointerToProfiles.push_back(profilePointer); //To delete later
         while (it != memberInfo.end())
         {
             std::string at, val, pair = *it;
@@ -151,13 +162,17 @@ std::vector<std::string> MemberDatabase::FindMatchingMembers(const AttValPair& i
         while(it != ValueTypePointer->end())
         {
             emails.push_back(*it);
-            //std::cout << *it << std::endl;
             it++;
             //n++;
         }
         //std::cout << n << std::endl;
     }
     return emails;
+}
+
+const PersonProfile* MemberDatabase::GetMemberByEmail(std::string email) const
+{
+    return *emailToProfile.search(email);
 }
 
 

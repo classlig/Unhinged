@@ -19,6 +19,7 @@ class MemberDatabase
 {
 public:
     MemberDatabase() {};
+    ~MemberDatabase();
     
     bool LoadDatabase(std::string filename);
     std::vector<std::string> FindMatchingMembers(const AttValPair& input) const;
@@ -27,6 +28,7 @@ public:
 private:
     RadixTree<std::list<std::string>> pairToEmail;
     RadixTree<PersonProfile*> emailToProfile;
+    std::list<PersonProfile*> pointerToProfiles;
     
 };
 #endif /* MemberDatabase_h */

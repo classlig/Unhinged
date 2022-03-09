@@ -163,6 +163,11 @@ std::vector<AttValPair> AttributeTranslator::FindCompatibleAttValPairs(const Att
     
     else if (attributeBucket.used == true)
     {
+        if (attributeBucket.source == nullptr)
+        {
+            attributeBucket = *attributeBucket.next;
+        }
+        
         while (*attributeBucket.source != source)
         {
             if (attributeBucket.next == nullptr)

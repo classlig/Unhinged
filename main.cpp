@@ -19,7 +19,7 @@ using namespace std;
 
 int main()
 {
-    
+    /*
     PersonProfile pp ("Kristal Light", "kristallee365@gmail.com");
     AttValPair a("hobby", "reading");
     AttValPair b("hobby", "gaming");
@@ -38,8 +38,10 @@ int main()
     }
     
     AttributeTranslator at;
-    
+    //Comment out either pathname depending on compiler
     string pathname =  "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/translator.txt";
+    
+    //string pathname = "translator.txt";
     if (at.Load(pathname) == false)
     {
         cout << "error" << endl;
@@ -47,8 +49,10 @@ int main()
     
     
     MemberDatabase md;
-    
+    //Comment out either pathname depending on compiler
     string mdpathname = "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/members.txt";
+    //string mdpathname = "members.txt";
+    
     
     if (md.LoadDatabase(mdpathname) == false)
     {
@@ -58,6 +62,19 @@ int main()
     AttValPair mba("trait", "quirky");
     md.FindMatchingMembers(mba);
     
+    AttValPair mbb("hobby", "eating");
+    vector<string> v = md.FindMatchingMembers(mbb);
+    if (v.empty() == true)
+    {
+        cout << "good" << endl;
+    }
+    
+    const PersonProfile* personProfilePointer = md.GetMemberByEmail("AbFow2483@charter.net");
+    string email = personProfilePointer->GetEmail();
+    cout << email << endl;
+    */
+    MatchMaker mm;
+    mm.IdentifyRankedMatches("MHa7@sky.com", 1);
     
     RadixTree<string> rt;
     rt.insert("apples", "oranges");
