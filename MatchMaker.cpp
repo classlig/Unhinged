@@ -11,12 +11,14 @@
 #include "PersonProfile.h"
 #include <iostream>
 #include <list>
+#include <map>
 #include <string>
 #include <vector>
 //Do we load files in this class?
-
+int counter; //REMOVE ME AFTER TESTING
 std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, int threshold) const
 {
+    //Load the AttributeTranslator
     AttributeTranslator at;
     std::string pathname =  "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/translator.txt";
     if (at.Load(pathname) == false)
@@ -25,6 +27,7 @@ std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, in
         
     }
     
+    //Load the MemberDatabase
     MemberDatabase md;
     std::string mdpathname = "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/members.txt";
     if (md.LoadDatabase(mdpathname) == false)
@@ -33,44 +36,85 @@ std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, in
         
     }
     
-    
+    //Retrieve the profile associated with the email
     const PersonProfile* memberProfile = md.GetMemberByEmail(email);
-    std::list<AttValPair> compatPairs;
+    std::list<AttValPair> myListOfCompatPairs; //Keep a list of the compatible pairs
     
-    for (int n = 0; n != memberProfile->GetNumAttValPairs(); n++)
+    int totNumPairs = memberProfile->GetNumAttValPairs();
+    for (int n = 0; n != totNumPairs; n++)
     {
-        
         AttValPair av;
         memberProfile->GetAttVal(n, av);
         
-        std::vector<AttValPair> translatedCompatPairs = at.FindCompatibleAttValPairs(av);
+        //Retrieve vector of compatible pairs
+        std::vector<AttValPair> vectorOfCompatPairs = at.FindCompatibleAttValPairs(av);
         
-        std::vector<AttValPair>::iterator it;
-        it = translatedCompatPairs.begin();
-        while(it != translatedCompatPairs.end())
+        std::vector<AttValPair>::iterator it = vectorOfCompatPairs.begin();
+        while(it != vectorOfCompatPairs.end())
         {
-            AttValPair compatible = *it;
-            std::list<AttValPair>::iterator lit = compatPairs.begin();
+            AttValPair compatiblePair = *it;
+            std::list<AttValPair>::iterator myListIt = myListOfCompatPairs.begin();
             
             bool hasCopy = false;
-            while (lit != compatPairs.end())
+            while (myListIt != myListOfCompatPairs.end())
             {
-                if ( compatible == *lit)
+                if ( compatiblePair == *myListIt)
                 {
                     hasCopy = true;
                 }
-                lit++;
+                myListIt++;
             }
             if (hasCopy == false)
             {
-                compatPairs.push_back(compatible);
+                myListOfCompatPairs.push_back(compatiblePair);
                 std::cout << it->attribute << " " << it->value << std::endl;
             }
             it++;
         }
+        
     }
+    std::list<AttValPair>::iterator myListIt = myListOfCompatPairs.begin();
+    std::map<std::string, int> myCompatEmailsMap;
     
-    
+    while (myListIt != myListOfCompatPairs.end())
+    {
+        
+        AttValPair compatiblePair = *myListIt;
+        //Retrieve vector of emails associated to the compatible pair
+        std::vector<std::string> emailList = md.FindMatchingMembers(compatiblePair);
+        
+        //Iterate through the vector and add it to the map of emails
+        std::vector<std::string>::iterator emailIt = emailList.begin();
+        
+        
+        while (emailIt != emailList.end())
+        {
+            std::map<std::string,int>::iterator mapIt = myCompatEmailsMap.find(*emailIt); //Check if email exists in map
+            if (mapIt == myCompatEmailsMap.end())
+            {
+                counter++;
+                myCompatEmailsMap[*emailIt] = 1;
+            }
+            else if (mapIt != myCompatEmailsMap.end())
+            {
+                mapIt->second++;
+            }
+            emailIt++;
+            
+        }
+        
+        //std::cout<< *emailIt << std::endl;
+        
+        myListIt++;
+    }
+    //TESTS
+    std::map<std::string,int>::iterator testIt = myCompatEmailsMap.begin();
+    while (testIt != myCompatEmailsMap.end())
+    {
+        std::cout << testIt->first << " " << testIt->second << std::endl;
+        testIt++;
+    }
+    std::cout << counter << std::endl;
     
     return nullptr;
 }
