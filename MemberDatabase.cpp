@@ -172,6 +172,10 @@ std::vector<std::string> MemberDatabase::FindMatchingMembers(const AttValPair& i
 
 const PersonProfile* MemberDatabase::GetMemberByEmail(std::string email) const
 {
+    if (emailToProfile.search(email) == nullptr)
+    {
+        return nullptr;
+    }
     return *emailToProfile.search(email);
 }
 

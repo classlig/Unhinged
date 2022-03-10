@@ -18,26 +18,31 @@
 int counter; //REMOVE ME AFTER TESTING
 std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, int threshold) const
 {
+    static std::vector<EmailCount> rankedMatches;
+    
     //Load the AttributeTranslator
     AttributeTranslator at;
-    std::string pathname =  "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/translator.txt";
+    std::string pathname =  "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/translatorTest.txt";
     if (at.Load(pathname) == false)
     {
-        std::cout << "error" << std::endl;
-        
+        return &rankedMatches;
     }
     
     //Load the MemberDatabase
     MemberDatabase md;
-    std::string mdpathname = "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/members.txt";
+    std::string mdpathname = "/Users/Kristal/Documents/CS 32/Project 4/Unhinged/membersTest.txt";
     if (md.LoadDatabase(mdpathname) == false)
     {
-        std::cout << "error at md" << std::endl;
-        
+        return &rankedMatches;
     }
     
     //Retrieve the profile associated with the email
     const PersonProfile* memberProfile = md.GetMemberByEmail(email);
+    if (memberProfile == nullptr) //Member doesn't exist
+    {
+        return &rankedMatches;
+    }
+    
     std::list<AttValPair> myListOfCompatPairs; //Keep a list of the compatible pairs
     
     int totNumPairs = memberProfile->GetNumAttValPairs();
@@ -117,25 +122,72 @@ std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, in
     }
     std::cout << counter << std::endl;
     */
- 
-    static std::vector<EmailCount> rankedMatches;
+    
+    std::map<std::string,int> mapRankedMatches;
     
     std::map<std::string,int>::iterator compatEmailsIt = myCompatEmailsMap.begin();
+    std::map<int,std::string> sortByCount;
     while (compatEmailsIt != myCompatEmailsMap.end())
     {
         if (compatEmailsIt->second >= threshold)
         {
+            
             std::string email = compatEmailsIt->first;
             int count = compatEmailsIt->second;
             
+            mapRankedMatches[email] = count;
+            //sortByCount[count] = email;
+            
             EmailCount match(email, count);
-            rankedMatches.push_back(match);
-            std::cout << match.email << match.count << std::endl;
+            //rankedMatches.push_back(match);  //UNCOMMENT WHEN DONE TESTING
+            std::cout << match.email << " " << match.count << std::endl;
+
         }
         
         compatEmailsIt++;
     }
-    
+    /*
+    std::map<std::string,int>::iterator sortIt = mapRankedMatches.begin();
+    do
+    {
+        int c = sortIt->second;
+        
+        
+    } while (sortIt != mapRankedMatches.end());
+    */
+    /*
+    for (int t = threshold; t > 0; t--)
+    {
+        std::unordered_map<std::string,int>::iterator unordered_mapIt = mapRankedMatches.begin();
+        while (unordered_mapIt != mapRankedMatches.end())
+        {
+            if (unordered_mapIt->second >= t)
+            {
+                std::cout << t << std::endl;
+                std::string email = compatEmailsIt->first;
+                int count = compatEmailsIt->second;
+                EmailCount match(email, count);
+                rankedMatches.push_back(match);
+                std::cout << match.email << " " << match.count << std::endl;
+            }
+            unordered_mapIt++;
+        }
+    }
+    */
+    /*
+    std::map<int,std::string>::iterator sortByCountIt = sortByCount.begin();
+    while (sortByCountIt != sortByCount.end())
+    {
+        std::cout << sortByCountIt->first << " " << sortByCountIt->second << std::endl;
+        int count = sortByCountIt->first;
+        std::string email = sortByCountIt->second;
+        
+        EmailCount match(email, count);
+        rankedMatches.push_back(match);
+        //std::cout << match.email << " " << match.count << std::endl;
+        sortByCountIt++;
+    }
+    */
     return &rankedMatches;
 }
 
