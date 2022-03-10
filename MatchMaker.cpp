@@ -67,7 +67,7 @@ std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, in
             if (hasCopy == false)
             {
                 myListOfCompatPairs.push_back(compatiblePair);
-                std::cout << it->attribute << " " << it->value << std::endl;
+                //std::cout << it->attribute << " " << it->value << std::endl;
             }
             it++;
         }
@@ -93,7 +93,10 @@ std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, in
             if (mapIt == myCompatEmailsMap.end())
             {
                 counter++;
-                myCompatEmailsMap[*emailIt] = 1;
+                if (*emailIt != email)
+                {
+                    myCompatEmailsMap[*emailIt] = 1;
+                }
             }
             else if (mapIt != myCompatEmailsMap.end())
             {
@@ -102,11 +105,9 @@ std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, in
             emailIt++;
             
         }
-        
-        //std::cout<< *emailIt << std::endl;
-        
         myListIt++;
     }
+    /*
     //TESTS
     std::map<std::string,int>::iterator testIt = myCompatEmailsMap.begin();
     while (testIt != myCompatEmailsMap.end())
@@ -115,7 +116,26 @@ std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, in
         testIt++;
     }
     std::cout << counter << std::endl;
+    */
+ 
+    static std::vector<EmailCount> rankedMatches;
     
-    return nullptr;
+    std::map<std::string,int>::iterator compatEmailsIt = myCompatEmailsMap.begin();
+    while (compatEmailsIt != myCompatEmailsMap.end())
+    {
+        if (compatEmailsIt->second >= threshold)
+        {
+            std::string email = compatEmailsIt->first;
+            int count = compatEmailsIt->second;
+            
+            EmailCount match(email, count);
+            rankedMatches.push_back(match);
+            std::cout << match.email << match.count << std::endl;
+        }
+        
+        compatEmailsIt++;
+    }
+    
+    return &rankedMatches;
 }
 
