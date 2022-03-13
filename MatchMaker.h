@@ -17,5 +17,7 @@ class MatchMaker
 public:
     MatchMaker() {};
     std::vector<EmailCount>* IdentifyRankedMatches(std::string email, int threshold) const;
+private:
+    void orderByCount(std::vector<EmailCount>& source, unsigned long n1, unsigned long n2, std::vector<EmailCount> temp) const;
 };
 #endif /* MatchMaker_h */

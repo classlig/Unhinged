@@ -16,6 +16,42 @@
 #include <vector>
 //Do we load files in this class?
 int counter; //REMOVE ME AFTER TESTING
+
+
+void MatchMaker::orderByCount(std::vector<EmailCount>& source, unsigned long n1, unsigned long n2, std::vector<EmailCount> temp) const
+{
+    int i1 = 0, i2 = 0, k = 0;
+    EmailCount* A1 = &source[0], *A2 = &source[0 + n1];
+    
+    while (i1 < n1 || i2 < n2)
+    {
+        if (i1 == n1)
+        {
+            temp[k++] = A2[i2++];
+        }
+        
+        else if (i2 == n2)
+        {
+            temp[k++] = A1[i1++];
+        }
+        
+        else if (source[i1].count >= A2[i2].count)
+        {
+            temp[k++] = A1[i1++];
+        }
+        
+        else
+            temp[k++] = A2[i2++];
+    }
+    
+    for (int i = 0; i < n1 + n2; i++)
+    {
+        source[i] = temp[i];
+        std::cout << source[i].email << " " << source[i].count << std::endl;
+    }
+        
+}
+
 std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, int threshold) const
 {
     static std::vector<EmailCount> rankedMatches;
@@ -112,18 +148,8 @@ std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, in
         }
         myListIt++;
     }
-    /*
-    //TESTS
-    std::map<std::string,int>::iterator testIt = myCompatEmailsMap.begin();
-    while (testIt != myCompatEmailsMap.end())
-    {
-        std::cout << testIt->first << " " << testIt->second << std::endl;
-        testIt++;
-    }
-    std::cout << counter << std::endl;
-    */
     
-    std::map<std::string,int> mapRankedMatches;
+    std::vector<EmailCount> emailCountVec;
     
     std::map<std::string,int>::iterator compatEmailsIt = myCompatEmailsMap.begin();
     std::map<int,std::string> sortByCount;
@@ -135,59 +161,43 @@ std::vector<EmailCount>* MatchMaker::IdentifyRankedMatches(std::string email, in
             std::string email = compatEmailsIt->first;
             int count = compatEmailsIt->second;
             
-            mapRankedMatches[email] = count;
+            //mapRankedMatches[email] = count;
             //sortByCount[count] = email;
             
             EmailCount match(email, count);
-            //rankedMatches.push_back(match);  //UNCOMMENT WHEN DONE TESTING
+            
+            emailCountVec.push_back(match);
+            
             std::cout << match.email << " " << match.count << std::endl;
 
         }
         
         compatEmailsIt++;
     }
-    /*
-    std::map<std::string,int>::iterator sortIt = mapRankedMatches.begin();
-    do
+    
+    unsigned long n = emailCountVec.size();
+    unsigned long n1 = n - n/2;
+    unsigned long n2 = n - (n - n/2);
+    
+    std::vector<EmailCount> temp;
+    for (int i = 0; i < n; i++) //Fill up temp vector
     {
-        int c = sortIt->second;
-        
-        
-    } while (sortIt != mapRankedMatches.end());
-    */
-    /*
-    for (int t = threshold; t > 0; t--)
-    {
-        std::unordered_map<std::string,int>::iterator unordered_mapIt = mapRankedMatches.begin();
-        while (unordered_mapIt != mapRankedMatches.end())
-        {
-            if (unordered_mapIt->second >= t)
-            {
-                std::cout << t << std::endl;
-                std::string email = compatEmailsIt->first;
-                int count = compatEmailsIt->second;
-                EmailCount match(email, count);
-                rankedMatches.push_back(match);
-                std::cout << match.email << " " << match.count << std::endl;
-            }
-            unordered_mapIt++;
-        }
+        std::string em;
+        int c = 0;
+        EmailCount e(em, c);
+        temp.push_back(e);
     }
-    */
-    /*
-    std::map<int,std::string>::iterator sortByCountIt = sortByCount.begin();
-    while (sortByCountIt != sortByCount.end())
+    
+    this->orderByCount(emailCountVec, n1, n2, temp);
+    
+    std::vector<EmailCount>::iterator ecvIt = emailCountVec.begin();
+    while (ecvIt != emailCountVec.end())
     {
-        std::cout << sortByCountIt->first << " " << sortByCountIt->second << std::endl;
-        int count = sortByCountIt->first;
-        std::string email = sortByCountIt->second;
-        
-        EmailCount match(email, count);
-        rankedMatches.push_back(match);
-        //std::cout << match.email << " " << match.count << std::endl;
-        sortByCountIt++;
+        rankedMatches.push_back(*ecvIt);
+        ecvIt++;
     }
-    */
+    
     return &rankedMatches;
 }
+
 
